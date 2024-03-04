@@ -1,0 +1,68 @@
+pipeline {
+    // Define the agent where the pipeline will run
+    agent {
+        node {
+            lable 'AGENT-1'
+        }
+    }
+    // Set pipeline options
+    options {
+        // Set console output color
+        ansiColor('xterm')
+        // Disable concurrent builds
+        disableConcurrentBuilds()
+        // Set a timeout limit for the pipeline
+        timeout(time: 1, unit: 'HOURS')
+    }
+    // Define environment variables
+    environment {
+        GREETING = 'hello jenkins'
+    }
+    // Define pipeline parameters
+    parameter {
+        string(name: 'PERSON', defaultValue: 'Apeksha', description: "what is the name of person?" )
+    }
+    // Define stages
+    stages {
+        stage ('one') {
+            step {
+                // Print a message
+                echo 'hi there'
+            }
+        }
+        stage('two') {
+            step {
+                // Print a message
+                echo 'this is from stage 2'
+            }
+        }
+        stage('three') {
+            step {
+                // Print a message
+                echo 'hi from stage 3'
+                sh """
+                    // Print the value of the environment variable
+                    echo "$GREETING"
+                """
+            }
+        }
+    }
+    // Define post actions
+    post {
+        // Actions to perform always
+        always {
+            // Print a message
+            echo 'i will always say hello'
+        }
+        // Actions to perform on failure
+        failure {
+            // Print a message
+            echo 'its a failure'
+        }
+        // Actions to perform on success
+        success {
+            // Print a message
+            echo 'This will run when pipeline is SUCCESS'
+        }
+    }    
+}
